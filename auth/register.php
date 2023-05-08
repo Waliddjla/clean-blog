@@ -1,25 +1,27 @@
 
 <?php require "../includes/header.php"; ?>
-  
+<?php require "../config/config.php"; ?>
 
 <?php 
 if (isset($_POST['submit'])) {
    
-  if($_POST['email'] =='' or $_POST['username']== '' or $_POST['password']) {
+  if($_POST['email'] =='' OR $_POST['username']== '' OR $_POST['password'] == '') {
     echo "type somthing in the inputs";
   }else {
     $email = $_POST['email'];
     $username = $_POST['username'];
-    $password = $_POST['password'];
-    $insert = $conn-> prepare("INSERT INTO users (email, username,mypassword) values
-    (':email',':username', ':password') ");
-  $insert-> bindValue(':email', $email);
-  $insert->execute ([
+    $password =password_hash($_POST['password'], PASSWORD_DEFAULT);
+
+
+    $insert = $conn->prepare("INSERT INTO users (email, username, mypassword) VALUES
+    (:email,:username, :mypassword)");
+     $insert->execute ([
     ':email' => $email,
     ':username' => $username,
-    ':password' => $password
+    ':mypassword' => $password
 
   ]);
+  header("location: login.php");
 
   }
 }
